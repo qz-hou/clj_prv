@@ -8,7 +8,7 @@ other_push_args = ":parent-selection :lexicase :genetic-operator-probabilities {
 
 run_numbers = "0-99"
 
-problems = ["compare-string-lengths",
+problems = [#"compare-string-lengths",
             #"double-letters",
             #"replace-space-with-newline",
            # "string-lengths-backwards",
@@ -18,7 +18,7 @@ problems = ["compare-string-lengths",
            # "x-word-lines",
            # "negative-to-zero",
            # "scrabble-score",
-           # "smallest",
+            "smallest",
            # "syllables"
 ]
 
