@@ -15,10 +15,10 @@ problems = [#"compare-string-lengths",
            # "last-index-of-zero",
            # "vector-average",
            # "mirror-image",
-           # "x-word-lines",
+            "x-word-lines",
            # "negative-to-zero",
            # "scrabble-score",
-            "smallest",
+           # "smallest",
            # "syllables"
 ]
 
