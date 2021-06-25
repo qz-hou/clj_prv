@@ -175,6 +175,9 @@
           ;; The probability, per gene, for additions in the first phase, and deletions in the second
           ;; phase (calculated for size-neutrality), of uniform-addition-and-deletion.
 
+         :add-instruction-from-other-rate 0.01
+         
+         
          :uniform-combination-rate 0.01
           ;; The probability, per gene, for combinations during uniform-combination
 
