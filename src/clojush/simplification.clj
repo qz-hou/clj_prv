@@ -194,7 +194,7 @@
      :silence - number of unsilenced or no-op genes to set :silent = true
      :unsilence - number of silenced or no-op genes to set :silent = false
      :no-op - number of unsilenced or silenced genes to set :silent = :no-op"
-  ([ind error-function steps print-progress-interval passed_func failed_func]
+  ([ind error-function steps print-progress-interval passed-func failed-func]
     (auto-simplify-plush ind error-function steps print-progress-interval
                          {{:silence 1} 0.5
                           {:silence 2} 0.3
@@ -204,8 +204,8 @@
                           ;{:silence 2 :unsilence 1} 0.1   ;Not used by default
                           ;{:silence 3 :unsilence 1} 0.05  ;Not used by default
                           ;{:no-op 1} 0.05                 ;Not used by default
-                          } passed_func failed_func))
-  ([ind error-function steps print-progress-interval simplification-step-probabilities passed_func failed_func]
+                          } passed-func failed-func))
+  ([ind error-function steps print-progress-interval simplification-step-probabilities passed-func failed-func]
     (when (not (zero? print-progress-interval))
       (printf "\nAuto-simplifying Plush genome with starting size: %s" (count (:genome ind))))
     (loop [step 0
@@ -229,15 +229,14 @@
       (def curr-ele
         #{})
       (if (>= step steps)
-        (make-individual :genome genome :program program :errors errors :total-error (apply + errors)
-                         :history (:history ind) :genetic-operators :simplification)
+        ([passed-func failed-func])
         (let [new-genome (apply-simplification-step-to-genome genome simplification-step-probabilities curr-ele)
               new-program (translate-plush-genome-to-push-program {:genome new-genome}
                                                                   {:max-points (* 10 (count genome))})
               new-errors (:errors (error-function {:program new-program}))]
           (if (and (= new-errors errors)
                    (<= (count-points new-program) (count-points program)))
-            (do (conj passed_func curr-ele)
+            (do (conj passed-func curr-ele)
                 (recur (inc step) new-genome new-program new-errors))
-            (do (conj failed_func curr-ele)
+            (do (conj failed-func curr-ele)
                 (recur (inc step) genome program errors))))))))
