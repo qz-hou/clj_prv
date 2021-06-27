@@ -334,15 +334,13 @@
      (let [pop-agents (make-pop-agents @push-argmap)
            child-agents (make-child-agents @push-argmap)
            {:keys [rand-gens]} (make-rng @push-argmap)]
-       (def passed_func
-         #{})
-       (def failed_func
-         #{})
+       (swap! push-argmap assoc :passed #{})
+       (swap! push-argmap assoc :failed #{})
        (loop [generation 0
               novelty-archive '()]
          (let [[next-novelty-archive return-val]
                (process-generation rand-gens pop-agents child-agents
-                                   generation novelty-archive @push-argmap passed_func failed_func)]
+                                   generation novelty-archive @push-argmap)]
            (if (nil? next-novelty-archive)
              return-val
              (recur (inc generation) next-novelty-archive))))))))
