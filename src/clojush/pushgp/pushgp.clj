@@ -293,11 +293,13 @@
                                       (when-not (:use-single-thread @push-argmap (apply await pop-agents))) ;; SYNCHRONIZE
                                       (reset! delay-archive [])))
                                   (timer @push-argmap :report)
-                                  (let [[curpassed curfailed] (repeatedly 50 (fn [] (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) 25 0 passed-func failed-func)))]
+                                  (repeatedly 50 (let [[curpassed curfailed] (fn [] (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) 25 0 passed-func failed-func))]
+                                                   (conj passed-func curpassed)
+                                                   (conj failed-func curfailed)))
                                   (swap! push-argmap assoc :passed passed-func)
                                   (swap! push-argmap assoc :failed failed-func)
                                   (prn "passed are:" (:passed @push-argmap))
-                                  (prn "failed are:" (:failed @push-argmap)))
+                                  (prn "failed are:" (:failed @push-argmap))
                                   (println "\nProducing offspring...") (flush)
                                   (produce-new-offspring pop-agents
                                                          child-agents
