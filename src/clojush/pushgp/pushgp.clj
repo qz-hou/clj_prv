@@ -293,9 +293,9 @@
                                       (when-not (:use-single-thread @push-argmap (apply await pop-agents))) ;; SYNCHRONIZE
                                       (reset! delay-archive [])))
                                   (timer @push-argmap :report)
-                                  (repeatedly 50 (let [[curpassed curfailed] (fn [] (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) 25 0 passed-func failed-func))]
-                                                   (conj passed-func curpassed)
-                                                   (conj failed-func curfailed)))
+                                  (repeatedly 50 (let [clist (fn [] (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) 25 0 passed-func failed-func))]
+                                                   (conj passed-func (nth clist 0))
+                                                   (conj failed-func (nth clist 1))))
                                   (swap! push-argmap assoc :passed passed-func)
                                   (swap! push-argmap assoc :failed failed-func)
                                   (prn "passed are:" (:passed @push-argmap))
