@@ -20,16 +20,32 @@
 ; Atom generators
 (def median-atom-generators
   (concat (list
-           (fn [] (- (lrand-int 201) 100))
-           (tag-instruction-erc [:exec :integer :boolean] 1000)
-           (tagged-instruction-erc 1000)
+            (fn [] (- (lrand-int 201) 100))
+            (tag-instruction-erc [:exec :integer :boolean] 1000)
+            (tagged-instruction-erc 1000)
             ;;; end ERCs
-           'in1
-           'in2
-           'in3
+            'in1
+            'in2
+            'in3
             ;;; end input instructions
+            )
+
+          
+          ;; Kitchen sink ERCs
+          (list
+           (fn [] (- (lrand-int 257) 128)) ;Integer ERC [-128,128]
+           (fn [] (- (lrand-int 20001) 10000)) ;Integer ERC [-10000,10000]
+           (fn [] (- (* (lrand) 1000.0) 500.0)) ;Float ERC [-500.0,500.0)
+           (fn [] (- (* (lrand) 20000.0) 10000.0)) ;Float ERC [-10000.0,10000.0)
+           (fn [] (lrand-nth (list true false))) ;Boolean ERC
+           (fn [] (lrand-nth (concat [\newline \tab] (map char (range 32 127))))) ;Visible character ERC
+           (fn [] (apply str (repeatedly (lrand-int 50) (fn [] (lrand-nth (map char (range 32 127))))))) ;String ERC
            )
-          (registered-for-stacks [:integer :boolean :exec :print])))
+          ;; Kitchen sink instructions
+          (registered-for-stacks [:float :integer :boolean :string :char :exec :print :code :parentheses :vector_boolean :vector_integer :vector_float :vector_string])
+
+
+          ))
 
 ;; A list of data domains for the median problem. Each domain is a vector containing
 ;; a "set" of inputs and two integers representing how many cases from the set
