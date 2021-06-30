@@ -229,7 +229,7 @@
       (def curr-ele
         #{})
       (if (>= step steps)
-        ('(passed-func failed-func))
+        (list passed-func failed-func)
         (let [new-genome (apply-simplification-step-to-genome genome simplification-step-probabilities curr-ele)
               new-program (translate-plush-genome-to-push-program {:genome new-genome}
                                                                   {:max-points (* 10 (count genome))})
