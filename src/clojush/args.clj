@@ -81,6 +81,8 @@
          :training-cases '()
           ;; The list of training cases (inputs and outputs). Used for some parent
           ;; selection methods, such as downsampled lexicase.
+         
+         :test-cases '()
 
          :sub-training-cases '()
           ;; The subsample of the training cases used for downsampled lexicase.
