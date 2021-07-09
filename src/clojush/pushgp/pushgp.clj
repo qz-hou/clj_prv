@@ -293,13 +293,13 @@
                                       (when-not (:use-single-thread @push-argmap (apply await pop-agents))) ;; SYNCHRONIZE
                                       (reset! delay-archive [])))
                                   (timer @push-argmap :report)
-                                  (repeatedly 50 (let [clist (fn [] (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) 25 0 passed-func failed-func))]
-                                                   (conj passed-func (nth clist 0))
-                                                   (conj failed-func (nth clist 1))))
-                                  (swap! push-argmap assoc :passed passed-func)
-                                  (swap! push-argmap assoc :failed failed-func)
-                                  (prn "passed are:" (:passed @push-argmap))
-                                  (prn "failed are:" (:failed @push-argmap))
+                                  (println "start simp")
+                                  (repeatedly 50 (let [vectorr
+                                                       (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) (:test-cases @push-argmap) 100 0)]
+                                                   (swap! push-argmap assoc :passed-func (conj (get vectorr 0) (flatten (:passed-func @push-argmap))))
+                                                   (swap! push-argmap assoc :failed-func (conj (get vectorr 1) (flatten (:failed-func @push-argmap))))))
+                                  (prn "passed are:" (:passed-func @push-argmap))
+                                  (prn "failed are:" (:failed-func @push-argmap))
                                   (println "\nProducing offspring...") (flush)
                                   (produce-new-offspring pop-agents
                                                          child-agents
@@ -336,8 +336,8 @@
      (let [pop-agents (make-pop-agents @push-argmap)
            child-agents (make-child-agents @push-argmap)
            {:keys [rand-gens]} (make-rng @push-argmap)]
-       (swap! push-argmap assoc :passed #{})
-       (swap! push-argmap assoc :failed #{})
+       (swap! push-argmap assoc :passed-func #{})
+       (swap! push-argmap assoc :failed-func #{})
        (loop [generation 0
               novelty-archive '()]
          (let [[next-novelty-archive return-val]
