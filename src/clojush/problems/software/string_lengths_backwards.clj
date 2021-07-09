@@ -27,23 +27,7 @@
             'in1
             ;;; end input instructions
             )
-
-
-          ;; Kitchen sink ERCs
-          (list
-           (fn [] (- (lrand-int 257) 128)) ;Integer ERC [-128,128]
-           (fn [] (- (lrand-int 20001) 10000)) ;Integer ERC [-10000,10000]
-           (fn [] (- (* (lrand) 1000.0) 500.0)) ;Float ERC [-500.0,500.0)
-           (fn [] (- (* (lrand) 20000.0) 10000.0)) ;Float ERC [-10000.0,10000.0)
-           (fn [] (lrand-nth (list true false))) ;Boolean ERC
-           (fn [] (lrand-nth (concat [\newline \tab] (map char (range 32 127))))) ;Visible character ERC
-           (fn [] (apply str (repeatedly (lrand-int 50) (fn [] (lrand-nth (map char (range 32 127))))))) ;String ERC
-           )
-          ;; Kitchen sink instructions
-          (registered-for-stacks [:float :integer :boolean :string :char :exec :print :code :parentheses :vector_boolean :vector_integer :vector_float :vector_string])
-
-
-          ))
+          (registered-for-stacks [:string :vector_string :integer :boolean :exec :print])))
 
 ;; Define test cases
 (defn string-generator
@@ -167,6 +151,7 @@
   {:error-function (make-string-lengths-backwards-error-function-from-cases (first string-lengths-backwards-train-and-test-cases)
                                                                             (second string-lengths-backwards-train-and-test-cases))
    :training-cases (first string-lengths-backwards-train-and-test-cases)
+   :test-cases (second string-lengths-backwards-train-and-test-cases)
    :sub-training-cases '()
    :atom-generators string-lengths-atom-generators
    :max-points 1200

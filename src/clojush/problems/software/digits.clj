@@ -32,23 +32,7 @@
             'in1
             ;;; end input instructions
             )
-
-
-          ;; Kitchen sink ERCs
-          (list
-           (fn [] (- (lrand-int 257) 128)) ;Integer ERC [-128,128]
-           (fn [] (- (lrand-int 20001) 10000)) ;Integer ERC [-10000,10000]
-           (fn [] (- (* (lrand) 1000.0) 500.0)) ;Float ERC [-500.0,500.0)
-           (fn [] (- (* (lrand) 20000.0) 10000.0)) ;Float ERC [-10000.0,10000.0)
-           (fn [] (lrand-nth (list true false))) ;Boolean ERC
-           (fn [] (lrand-nth (concat [\newline \tab] (map char (range 32 127))))) ;Visible character ERC
-           (fn [] (apply str (repeatedly (lrand-int 50) (fn [] (lrand-nth (map char (range 32 127))))))) ;String ERC
-           )
-          ;; Kitchen sink instructions
-          (registered-for-stacks [:float :integer :boolean :string :char :exec :print :code :parentheses :vector_boolean :vector_integer :vector_float :vector_string])
-
-
-          ))
+          (registered-for-stacks [:integer :boolean :string :char :exec :print])))
 
 (defn my-rand-long
   "replaces rand-int when need longs"
@@ -99,8 +83,8 @@
                                                      data-cases)]
                        (let [final-state (run-push (:program individual)
                                                    (->> (make-push-state)
-                                                     (push-item input1 :input)
-                                                     (push-item "" :output)))
+                                                        (push-item input1 :input)
+                                                        (push-item "" :output)))
                              result (stack-ref :output 0 final-state)]
                          (when print-outputs
                            (println (format "| Correct output: %s\n| Program output: %s\n" (pr-str correct-output) (pr-str result))))
@@ -159,6 +143,7 @@
   {:error-function (make-digits-error-function-from-cases (first digits-train-and-test-cases)
                                                           (second digits-train-and-test-cases))
    :training-cases (first digits-train-and-test-cases)
+   :test-cases (second digits-train-and-test-cases)
    :atom-generators digits-atom-generators
    :max-points 1200
    :max-genome-size-in-initial-program 150

@@ -33,22 +33,7 @@
             'in2
             ;;; end input instructions
             )
-
-
-          ;; Kitchen sink ERCs
-          (list
-           (fn [] (- (lrand-int 257) 128)) ;Integer ERC [-128,128]
-           (fn [] (- (lrand-int 20001) 10000)) ;Integer ERC [-10000,10000]
-           (fn [] (- (* (lrand) 1000.0) 500.0)) ;Float ERC [-500.0,500.0)
-           (fn [] (- (* (lrand) 20000.0) 10000.0)) ;Float ERC [-10000.0,10000.0)
-           (fn [] (lrand-nth (list true false))) ;Boolean ERC
-           (fn [] (lrand-nth (concat [\newline \tab] (map char (range 32 127))))) ;Visible character ERC
-           (fn [] (apply str (repeatedly (lrand-int 50) (fn [] (lrand-nth (map char (range 32 127))))))) ;String ERC
-           )
-          ;; Kitchen sink instructions
-          (registered-for-stacks [:float :integer :boolean :string :char :exec :print :code :parentheses :vector_boolean :vector_integer :vector_float :vector_string])
-
-          ))
+          (registered-for-stacks [:string :char :integer :boolean :exec])))
 
 
 ;; Define test cases
@@ -210,6 +195,7 @@
   {:error-function (make-super-anagrams-error-function-from-cases (first super-anagrams-train-and-test-cases)
                                                                   (second super-anagrams-train-and-test-cases))
    :training-cases (first super-anagrams-train-and-test-cases)
+   :test-cases (second super-anagrams-train-and-test-cases)
    :atom-generators super-anagrams-atom-generators
    :max-points 3200
    :max-genome-size-in-initial-program 400

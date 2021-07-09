@@ -109,23 +109,7 @@
             'file_begin
             ;;; end input instructions
             )
-
-
-          ;; Kitchen sink ERCs
-          (list
-           (fn [] (- (lrand-int 257) 128)) ;Integer ERC [-128,128]
-           (fn [] (- (lrand-int 20001) 10000)) ;Integer ERC [-10000,10000]
-           (fn [] (- (* (lrand) 1000.0) 500.0)) ;Float ERC [-500.0,500.0)
-           (fn [] (- (* (lrand) 20000.0) 10000.0)) ;Float ERC [-10000.0,10000.0)
-           (fn [] (lrand-nth (list true false))) ;Boolean ERC
-           (fn [] (lrand-nth (concat [\newline \tab] (map char (range 32 127))))) ;Visible character ERC
-           (fn [] (apply str (repeatedly (lrand-int 50) (fn [] (lrand-nth (map char (range 32 127))))))) ;String ERC
-           )
-          ;; Kitchen sink instructions
-          (registered-for-stacks [:float :integer :boolean :string :char :exec :print :code :parentheses :vector_boolean :vector_integer :vector_float :vector_string])
-
-
-          ))
+          (registered-for-stacks [:string :vector_string :char :integer :vector_integer :float :vector_float :boolean :exec :print])))
 
 
 ;; Define test cases
@@ -298,6 +282,7 @@
   {:error-function (make-word-stats-error-function-from-cases (first word-stats-train-and-test-cases)
                                                               (second word-stats-train-and-test-cases))
    :training-cases (first word-stats-train-and-test-cases)
+   :test-cases (second word-stats-train-and-test-cases)
    :atom-generators word-stats-atom-generators
    :max-points 3200
    :max-genome-size-in-initial-program 400
