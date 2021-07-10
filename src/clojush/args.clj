@@ -113,6 +113,7 @@
                                           :uniform-deletion 0.0
                                           :uniform-addition 0.0
                                           :uniform-addition-and-deletion 0.0
+                                          :modified-uniform-addition-and-deletion
                                           :uniform-combination-and-deletion 0.0
                                           :genesis 0.0
                                           :gene-selection 0.0
@@ -179,7 +180,10 @@
 
          :add-instruction-from-other-rate 0.01
          
-         
+         :passed #{}
+
+         :failed #{}
+
          :uniform-combination-rate 0.01
           ;; The probability, per gene, for combinations during uniform-combination
 
