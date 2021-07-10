@@ -113,7 +113,7 @@
                                           :uniform-deletion 0.0
                                           :uniform-addition 0.0
                                           :uniform-addition-and-deletion 0.0
-                                          :modified-uniform-addition-and-deletion
+                                          :modified-uniform-addition-and-deletion 0.0
                                           :uniform-combination-and-deletion 0.0
                                           :genesis 0.0
                                           :gene-selection 0.0
