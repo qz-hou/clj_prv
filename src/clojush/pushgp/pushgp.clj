@@ -295,7 +295,7 @@
                                   (timer @push-argmap :report)
                                   (println "start simp")
                                   (repeatedly 50 (let [vectorr
-                                                       (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) (:test-cases @push-argmap) 100 0)]
+                                                       (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) (:test-cases @push-argmap) 10 0)]
                                                    (swap! push-argmap assoc :passed-func (conj (get vectorr 0) (flatten (:passed-func @push-argmap))))
                                                    (swap! push-argmap assoc :failed-func (conj (get vectorr 1) (flatten (:failed-func @push-argmap))))))
                                   (prn "passed are:" (:passed-func @push-argmap))
@@ -346,6 +346,3 @@
            (if (nil? next-novelty-archive)
              return-val
              (recur (inc generation) next-novelty-archive))))))))
-
-
-
