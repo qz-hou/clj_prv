@@ -9,17 +9,17 @@ other_push_args = ":parent-selection :lexicase :genetic-operator-probabilities {
 run_numbers = "0-99"
 
 problems = ["compare-string-lengths",
-            #"double-letters",
-            # "replace-space-with-newline",
-           # "string-lengths-backwards",
-           # "last-index-of-zero",
-           # "vector-average",
+            "double-letters",
+             "replace-space-with-newline",
+            "string-lengths-backwards",
+            "last-index-of-zero",
+            "vector-average",
            # "mirror-image",
-           # "x-word-lines",
-           # "negative-to-zero",
-           # "scrabble-score",
-           # "smallest",
-           # "syllables"
+            "x-word-lines",
+            "negative-to-zero",
+            "scrabble-score",
+            "smallest",
+            "syllables"
 ]
 
 #problems = ["vector-average"]
