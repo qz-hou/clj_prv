@@ -20,10 +20,10 @@
                                           program-so-far []
                                           rest-program open-close-seq]
                                      (cond
-                                       (nil? rest-program) 
+                                       (nil? rest-program)
                                        (apply list program-so-far)
                                        ;
-                                       (= (first rest-program) :open) 
+                                       (= (first rest-program) :open)
                                        (if (== open-count pair-to-remove)
                                          (recur (inc open-count)
                                                 1
@@ -34,7 +34,7 @@
                                                 (conj program-so-far (first rest-program))
                                                 (next rest-program)))
                                        ;
-                                       (= (first rest-program) :close) 
+                                       (= (first rest-program) :close)
                                        (if (zero? (dec close-diff))
                                          (recur open-count
                                                 max-number-magnitude
@@ -45,10 +45,10 @@
                                                 (conj program-so-far (first rest-program))
                                                 (next rest-program)))
                                        ;
-                                       :else 
+                                       :else
                                        (recur open-count
                                               close-diff
-                                              (conj program-so-far (first rest-program)) 
+                                              (conj program-so-far (first rest-program))
                                               (next rest-program))))]
           (open-close-sequence-to-list pair-removed-program))))))
 
@@ -150,6 +150,8 @@
    probabilistically, and then applies it to the genome by silencing/unsilencing/no-oping
    random genes that aren't already of that type."
   [genome simplification-step-probabilities]
+  (def test
+    genome)
   (let [transformation-map (select-random-weighted-item simplification-step-probabilities)
         silencings (get transformation-map :silence 0)
         unsilencings (get transformation-map :unsilence 0)
@@ -177,16 +179,32 @@
         indices-to-no-op (choose-random-k-without-replacement no-opings indices-available-to-no-op)]
     ; Order of changes is: unsilence -> no-op -> silence
     ; This makes it so silencings take highest priority.
-    (def curr-ret 
+    (def curr-ret
       (map #(get genome %) curr))
-    (def ret-set 
+    (def ret-set
       (set curr-ret))
-    (-> genome
-      vec      ; Needs to be a vector for change-silent-at-indices
-      (change-silent-at-indices indices-to-unsilence false)
-      (change-silent-at-indices indices-to-no-op :no-op)
-      (change-silent-at-indices indices-to-silence true))
-    (vector ret-set genome)))
+    (def new-gen
+      (-> genome
+          vec      ; Needs to be a vector for change-silent-at-indices
+          (change-silent-at-indices indices-to-unsilence false)
+          (change-silent-at-indices indices-to-no-op :no-op)
+          (change-silent-at-indices indices-to-silence true)))
+    (vector ret-set new-gen)))
+
+
+    (defn get-partial-errors
+      "Takes a genome and a map of transformation/probability pairs. Picks a transformation
+       probabilistically, and then applies it to the genome by silencing/unsilencing/no-oping
+       random genes that aren't already of that type."
+      [program new-program cases error-function]
+      (let [old-par (:errors (error-function {:program program} cases))
+            new-par (:errors (error-function {:program new-program} cases))]
+        (vector old-par new-par)))
+
+
+
+
+
 
 (defn auto-simplify-plush
   "Automatically simplifies the genome of an individual without changing its error vector on
@@ -213,36 +231,36 @@
   ([ind error-function test-cases steps print-progress-interval simplification-step-probabilities]
     (when (not (zero? print-progress-interval))
       (printf "\nAuto-simplifying Plush genome with starting size: %s" (count (:genome ind))))
-    (loop [step 0
-           genome (:genome ind)
-           program (if (:program ind)
-                     (:program ind)
-                     (translate-plush-genome-to-push-program ind
-                                                             {:max-points (* 10 (count genome))}))
-           errors (if (:errors ind)
-                    (:errors ind)
-                    (:errors (error-function ind)))]
-      (when (and (not (zero? print-progress-interval))
-                 (or (>= step steps)
-                     (zero? (mod step print-progress-interval))))
-        (println "\nstep:" step)
-        (println "genome:" (pr-str (not-lazy genome)))
-        (println "program:" (pr-str (not-lazy program)))
-        (println "errors:" (not-lazy errors))
-        (println "genome size:" (count genome))
-        (println "program size:" (count-points program)))
-      (if (>= step steps)
-        (vector (:passed-set @the-map) (:failed-set @the-map))
-        (let [new-genome (get (apply-simplification-step-to-genome genome simplification-step-probabilities) 1)
-              curr-ele (get (apply-simplification-step-to-genome genome simplification-step-probabilities) 0)
-              new-program (translate-plush-genome-to-push-program {:genome new-genome}
-                                                                  {:max-points (* 10 (count genome))})
-              cases (list (rand-nth test-cases) (rand-nth test-cases))
-              new-errors (:errors (error-function {:program new-program} cases))]
-          (if (and (= new-errors errors)
+      (loop [step 0
+             genome (:genome ind)
+             program (if (:program ind)
+                       (:program ind)
+                       (translate-plush-genome-to-push-program ind
+                                                               {:max-points (* 10 (count genome))}))
+             errors (if (:errors ind)
+                      (:errors ind)
+                      (:errors (error-function ind)))]
+        (when (and (not (zero? print-progress-interval))
+                   (or (>= step steps)
+                       (zero? (mod step print-progress-interval))))
+          (println "\nstep:" step)
+          (println "genome:" (pr-str (not-lazy genome)))
+          (println "program:" (pr-str (not-lazy program)))
+          (println "errors:" (not-lazy errors))
+          (println "genome size:" (count genome))
+          (println "program size:" (count-points program)))
+        (if (>= step steps)
+          (vector (:passed-set @the-map) (:failed-set @the-map))
+          (let [[curr-ele new-genome] (apply-simplification-step-to-genome genome simplification-step-probabilities)
+                new-program (translate-plush-genome-to-push-program {:genome new-genome}
+                                                                    {:max-points (* 10 (count genome))})
+                cases (list (rand-nth test-cases) (rand-nth test-cases))
+                [old-par new-par] (get-partial-errors program new-program cases error-function)
+                new-errors (:errors (error-function {:program new-program}))]
+            (if (and (= new-par old-par)
                    (<= (count-points new-program) (count-points program)))
-            (do (if (not (= #{} (:faileded-set @the-map)))
-                  (swap! the-map assoc :faileed-set (clojure.set/union curr-ele (:failed-set @the-map)))
+            (do (if (not (= #{} (:failed-set @the-map)))
+                  (swap! the-map assoc :failed-set (clojure.set/union curr-ele (:failed-set @the-map)))
                   (swap! the-map assoc :failed-set curr-ele))
                 (recur (inc step) new-genome new-program new-errors))
             (do (if (not (= #{} (:passed-set @the-map)))
