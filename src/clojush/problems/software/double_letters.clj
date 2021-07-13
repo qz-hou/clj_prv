@@ -173,6 +173,7 @@
   {:error-function (make-double-letters-error-function-from-cases (first double-letters-train-and-test-cases)
                                                                   (second double-letters-train-and-test-cases))
    :training-cases (first double-letters-train-and-test-cases)
+   :test-cases (second double-letters-train-and-test-cases)
    :sub-training-cases '()
    :atom-generators double-letters-atom-generators
    :max-points 3200
