@@ -29,7 +29,21 @@
             'in2
             ;;; end input instructions
             )
-          (registered-for-stacks [:float :integer :print])))
+
+          ;; Kitchen sink ERCs
+          (list
+           (fn [] (- (lrand-int 257) 128)) ;Integer ERC [-128,128]
+           (fn [] (- (lrand-int 20001) 10000)) ;Integer ERC [-10000,10000]
+           (fn [] (- (* (lrand) 1000.0) 500.0)) ;Float ERC [-500.0,500.0)
+           (fn [] (- (* (lrand) 20000.0) 10000.0)) ;Float ERC [-10000.0,10000.0)
+           (fn [] (lrand-nth (list true false))) ;Boolean ERC
+           (fn [] (lrand-nth (concat [\newline \tab] (map char (range 32 127))))) ;Visible character ERC
+           (fn [] (apply str (repeatedly (lrand-int 50) (fn [] (lrand-nth (map char (range 32 127))))))) ;String ERC
+           )
+          ;; Kitchen sink instructions
+          (registered-for-stacks [:float :integer :boolean :string :char :exec :print :code :parentheses :vector_boolean :vector_integer :vector_float :vector_string])
+
+          ))
 
 ;; A list of data domains for the number IO problem. Each domain is a vector containing
 ;; a "set" of inputs and two integers representing how many cases from the set
@@ -138,7 +152,6 @@
   {:error-function (make-number-io-error-function-from-cases (first number-io-train-and-test-cases)
                                                              (second number-io-train-and-test-cases))
    :training-cases (first number-io-train-and-test-cases)
-   :test-cases (second number-io-train-and-test-cases)
    :atom-generators num-io-atom-generators
    :max-points 800
    :max-genome-size-in-initial-program 100

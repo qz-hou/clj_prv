@@ -162,7 +162,6 @@
 (def argmap
   {:error-function (make-moving-average-error-function-from-cases (first moving-average-train-and-test-cases)
                                                                   (second moving-average-train-and-test-cases))
-   :test-cases (second moving-average-train-and-test-cases)
    :atom-generators moving-average-atom-generators
    :max-points 2000
    :max-genome-size-in-initial-program 250

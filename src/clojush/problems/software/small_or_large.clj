@@ -23,13 +23,28 @@
             ;;; end constants
             (fn [] (- (lrand-int 20001) 10000)) ;Integer ERC [-10000,10000]
             ;;; end ERCs
-            (tag-instruction-erc [:integer :boolean :exec :string] 1000)
+            (tag-instruction-erc [:integer :boolean :exec] 1000)
             (tagged-instruction-erc 1000)
             ;;; end tag ERCs
             'in1
             ;;; end input instructions
             )
-          (registered-for-stacks [:integer :boolean :exec :string :print])))
+
+
+          ;; Kitchen sink ERCs
+          (list
+           (fn [] (- (lrand-int 257) 128)) ;Integer ERC [-128,128]
+           (fn [] (- (lrand-int 20001) 10000)) ;Integer ERC [-10000,10000]
+           (fn [] (- (* (lrand) 1000.0) 500.0)) ;Float ERC [-500.0,500.0)
+           (fn [] (- (* (lrand) 20000.0) 10000.0)) ;Float ERC [-10000.0,10000.0)
+           (fn [] (lrand-nth (list true false))) ;Boolean ERC
+           (fn [] (lrand-nth (concat [\newline \tab] (map char (range 32 127))))) ;Visible character ERC
+           (fn [] (apply str (repeatedly (lrand-int 50) (fn [] (lrand-nth (map char (range 32 127))))))) ;String ERC
+           )
+          ;; Kitchen sink instructions
+          (registered-for-stacks [:float :integer :boolean :string :char :exec :print :code :parentheses :vector_boolean :vector_integer :vector_float :vector_string])
+
+          ))
 
 
 ;; A list of data domains for the problem. Each domain is a vector containing
@@ -136,7 +151,6 @@
   {:error-function (make-small-or-large-error-function-from-cases (first small-or-large-train-and-test-cases)
                                                                   (second small-or-large-train-and-test-cases))
    :training-cases (first small-or-large-train-and-test-cases)
-   :test-cases (second small-or-large-train-and-test-cases)
    :sub-training-cases '()
    :atom-generators small-or-large-atom-generators
    :max-points 800
@@ -148,7 +162,8 @@
    :genetic-operator-probabilities {:alternation 0.2
                                     :uniform-mutation 0.2
                                     :uniform-close-mutation 0.1
-                                    [:alternation :uniform-mutation] 0.5}
+                                    [:alternation :uniform-mutation] 0.5
+                                    }
    :alternation-rate 0.01
    :alignment-deviation 5
    :uniform-mutation-rate 0.01
@@ -156,4 +171,5 @@
    :problem-specific-initial-report small-or-large-initial-report
    :report-simplifications 0
    :final-report-simplifications 5000
-   :max-error 5000})
+   :max-error 5000
+   })
