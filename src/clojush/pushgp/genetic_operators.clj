@@ -662,6 +662,7 @@ given by uniform-deletion-rate.
         new-genome (vec (filter identity
                                 (mapv #(if (< (lrand) deletion-rate) nil %)
                                       after-addition)))]
+    (println "modified working")
     (make-individual :genome new-genome
                      :history (:history ind)
                      :grain-size (compute-grain-size new-genome ind argmap)
