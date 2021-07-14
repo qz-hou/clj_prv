@@ -652,7 +652,7 @@ given by uniform-deletion-rate.
                                    (mapv #(if (< (lrand) addition-rate)
                                             (lshuffle [%
                                                        (if (< (lrand) add-instruction-from-other-rate)
-                                                         (if (= passed-func nil)
+                                                         (if (= passed-func #{})
                                                              (random-genome-gene atom-generators argmap)
                                                              (rand-nth (passed-func)))
                                                          ;(rand-nth (:genome (select population argmap)))
