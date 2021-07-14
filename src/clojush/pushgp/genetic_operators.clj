@@ -642,6 +642,7 @@ given by uniform-deletion-rate.
   Works with Plushy genomes."
   [ind {:keys [uniform-addition-and-deletion-rate add-instruction-from-other-rate maintain-ancestors atom-generators passed failed population]
         :as argmap}]
+  (println "addition rate" (random-element-or-identity-if-not-a-collection uniform-addition-and-deletion-rate))
   (let [addition-rate (random-element-or-identity-if-not-a-collection uniform-addition-and-deletion-rate)
         add-instruction-from-other-rate (random-element-or-identity-if-not-a-collection add-instruction-from-other-rate)
         deletion-rate (if (zero? addition-rate)
