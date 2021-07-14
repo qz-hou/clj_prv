@@ -641,7 +641,7 @@ given by uniform-deletion-rate.
   element of the genome may possibly be deleted. Probabilities are given by
   uniform-addition-and-deletion-rate.
   Works with Plushy genomes."
-  [ind {:keys [uniform-addition-and-deletion-rate add-instruction-from-other-rate maintain-ancestors atom-generators passed failed]
+  [ind {:keys [uniform-addition-and-deletion-rate add-instruction-from-other-rate maintain-ancestors atom-generators passed-func failed-func]
         :as argmap}]
   (let [addition-rate (random-element-or-identity-if-not-a-collection uniform-addition-and-deletion-rate)
         add-instruction-from-other-rate (random-element-or-identity-if-not-a-collection add-instruction-from-other-rate)
@@ -652,11 +652,11 @@ given by uniform-deletion-rate.
                                    (mapv #(if (< (lrand) addition-rate)
                                             (lshuffle [%
                                                        (if (< (lrand) add-instruction-from-other-rate)
-                                                         (rand-nth (passed))
+                                                         (rand-nth (passed-func))
                                                          ;(rand-nth (:genome (select population argmap)))
                                                          (do (random-genome-gene atom-generators argmap)
                                                            (when (map ((fn [coll ele] (some (fn [m] (= ele m)) coll))
-                                                                     [failed (random-genome-gene atom-generators argmap)])))
+                                                                     [failed-func (random-genome-gene atom-generators argmap)])))
                                                              (random-genome-gene atom-generators argmap)))])
                                             [%])
                                          (:genome ind))))
