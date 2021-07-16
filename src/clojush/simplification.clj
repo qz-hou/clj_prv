@@ -150,8 +150,6 @@
    probabilistically, and then applies it to the genome by silencing/unsilencing/no-oping
    random genes that aren't already of that type."
   [genome simplification-step-probabilities]
-  (def test
-    genome)
   (let [transformation-map (select-random-weighted-item simplification-step-probabilities)
         silencings (get transformation-map :silence 0)
         unsilencings (get transformation-map :unsilence 0)
