@@ -197,8 +197,8 @@
        probabilistically, and then applies it to the genome by silencing/unsilencing/no-oping
        random genes that aren't already of that type."
       [program new-program cases error-function]
-      (let [old-par (:errors (error-function {:program program} cases))
-            new-par (:errors (error-function {:program new-program} cases))]
+      (let [old-par (:errors (error-function {:program program} cases true))
+            new-par (:errors (error-function {:program new-program} cases true))]
         (vector old-par new-par)))
 
 
