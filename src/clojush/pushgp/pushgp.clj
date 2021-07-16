@@ -328,6 +328,9 @@
      (r/uuid! (:run-uuid @push-argmap))
      (print-params (r/config-data! [:argmap] @push-argmap))
      (check-genetic-operator-probabilities-add-to-one @push-argmap)
+
+     (println "you are using operat9orfffff " (:genetic-operator-probabilities @push-argmap))
+
      (timer @push-argmap :initialization)
      (when (:print-timings @push-argmap)
        (r/config-data! [:initialization-ms] (:initialization @timer-atom)))

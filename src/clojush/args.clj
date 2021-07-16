@@ -93,8 +93,8 @@
           ;;----------------------------------------
 
          :genetic-operator-probabilities {:reproduction 0.0
-                                          :alternation 0.7
-                                          :uniform-mutation 0.1
+                                          :alternation 0.0
+                                          :uniform-mutation 0.0
                                           :uniform-instruction-mutation 0.0
                                           :uniform-integer-mutation 0.0
                                           :uniform-float-mutation 0.0
@@ -102,7 +102,7 @@
                                           :uniform-string-mutation 0.0
                                           :uniform-boolean-mutation 0.0
                                            ; Similar to the old ULTRA operator:
-                                          [:alternation :uniform-mutation] 0.2
+                                          [:alternation :uniform-mutation] 0.0
                                           :uniform-close-mutation 0.0
                                           :uniform-silence-mutation 0.0
                                           :uniform-crossover 0.0
@@ -113,7 +113,7 @@
                                           :uniform-deletion 0.0
                                           :uniform-addition 0.0
                                           :uniform-addition-and-deletion 0.0
-                                          :modified-uniform-addition-and-deletion 0.0
+                                          :modified-uniform-addition-and-deletion 1
                                           :uniform-combination-and-deletion 0.0
                                           :genesis 0.0
                                           :gene-selection 0.0
