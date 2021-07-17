@@ -247,6 +247,7 @@
           (println "errors:" (not-lazy errors))
           (println "genome size:" (count genome))
           (println "program size:" (count-points program)))
+        (println "atom set is" (:passed-set @the-map) "failed" (:failed-set @the-map))
         (if (>= step steps)
           (vector (:passed-set @the-map) (:failed-set @the-map))
           (let [[curr-ele new-genome] (apply-simplification-step-to-genome genome simplification-step-probabilities)
