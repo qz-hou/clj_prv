@@ -655,7 +655,7 @@ given by uniform-deletion-rate.
                                                        (if (< (lrand) add-instruction-from-other-rate)
                                                          (if (= passed-func #{})
                                                            (random-genome-gene atom-generators argmap)
-                                                           (rand-nth (list passed-func)))
+                                                           (rand-nth (seq passed-func)))
                                                          ;(rand-nth (:genome (select population argmap)))
                                                          (do (let [cure (random-genome-gene atom-generators argmap)]
                                                            (if (contains? failed-func cure)
