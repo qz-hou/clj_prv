@@ -642,8 +642,9 @@ given by uniform-deletion-rate.
   element of the genome may possibly be deleted. Probabilities are given by
   uniform-addition-and-deletion-rate.
   Works with Plushy genomes."
-  [ind {:keys [uniform-addition-and-deletion-rate add-instruction-from-other-rate maintain-ancestors atom-generators passed-func failed-func population]
+  [ind {:keys [uniform-addition-and-deletion-rate add-instruction-from-other-rate maintain-ancestors atom-generators population]
         :as argmap}]
+  (println "random is: " (rand-nth (seq (:passed-set @the-map))))
   (let [addition-rate (random-element-or-identity-if-not-a-collection uniform-addition-and-deletion-rate)
         add-instruction-from-other-rate (random-element-or-identity-if-not-a-collection add-instruction-from-other-rate)
         deletion-rate (if (zero? addition-rate)
@@ -653,14 +654,13 @@ given by uniform-deletion-rate.
                                    (mapv #(if (< (lrand) addition-rate)
                                             (lshuffle [%
                                                        (if (< (lrand) add-instruction-from-other-rate)
-                                                         (if (= passed-func #{})
+                                                         (if (= (:passed-set @the-map) #{})
                                                            (random-genome-gene atom-generators argmap)
-                                                           (rand-nth (seq passed-func)))
+                                                           (rand-nth (seq (:passed-set @the-map))))
                                                          ;(rand-nth (:genome (select population argmap)))
                                                          (do (let [cure (random-genome-gene atom-generators argmap)]
-                                                           (if (contains? failed-func cure)
-                                                             (random-genome-gene atom-generators argmap)
-                                                             (conj cure nil)))))])
+                                                           (when (contains? (:failed-set @the-map) cure)
+                                                             (random-genome-gene atom-generators argmap)))))])
                                             [%])
                                          (:genome ind))))
         new-genome (vec (filter identity

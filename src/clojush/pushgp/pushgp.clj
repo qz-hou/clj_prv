@@ -295,11 +295,9 @@
                                   (timer @push-argmap :report)
                                   (println "start simp")
                                   (repeatedly 50 (let [vectorr
-                                                       (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) (:training-cases @push-argmap) 10 0)]
-                                                   (swap! push-argmap assoc :passed-func (conj (get vectorr 0) (flatten (:passed-func @push-argmap))))
-                                                   (swap! push-argmap assoc :failed-func (conj (get vectorr 1) (flatten (:failed-func @push-argmap))))))
-                                  (prn "passed are:" (:passed-func @push-argmap))
-                                  (prn "failed are:" (:failed-func @push-argmap))
+                                                       (auto-simplify-plush (select (map #(deref %) pop-agents) @push-argmap) (:error-function @push-argmap) (:training-cases @push-argmap) 10 0)]))
+                                  (prn "passed are:" (:passed-set @the-map))
+                                  (prn "failed are:" (:failed-set @the-map))
                                   (println "\nProducing offspring...") (flush)
                                   (produce-new-offspring pop-agents
                                                          child-agents
@@ -339,8 +337,6 @@
      (let [pop-agents (make-pop-agents @push-argmap)
            child-agents (make-child-agents @push-argmap)
            {:keys [rand-gens]} (make-rng @push-argmap)]
-       (swap! push-argmap assoc :passed-func #{})
-       (swap! push-argmap assoc :failed-func #{})
        (loop [generation 0
               novelty-archive '()]
          (let [[next-novelty-archive return-val]
